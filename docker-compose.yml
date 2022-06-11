@@ -1,0 +1,43 @@
+version: "3.9"
+services:
+  postgres12:
+    image: postgres:12-alpine
+    environment:
+    - POSTGRES_PASSWORD=password
+    - POSTGRES_DB=db
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "db", "-U", "postgres" ]
+      timeout: 45s
+      interval: 20s
+      retries: 5
+    deploy:
+      restart_policy:
+        condition: on-failure
+  frontend:
+    image: m2tx/nwtc-frontend:0.0.1
+    healthcheck:
+      test: "service nginx status || exit 1"
+      interval: 30s
+      timeout: 30s
+      retries: 3
+      start_period: 15s
+    ports:
+      - 80:80
+    deploy:
+      restart_policy:
+        condition: on-failure
+  backend:
+    image: m2tx/nwtc-backend:0.0.1
+    healthcheck:
+      test: "curl --fail --silent http://localhost:8080/actuator/health | grep UP || exit 1"
+      interval: 30s
+      timeout: 30s
+      retries: 3
+      start_period: 30s
+    environment:
+      - "SPRING_PROFILES_ACTIVE=production"
+    ports:
+      - 8080:8080
+    deploy:
+      restart_policy:
+        condition: on-failure
