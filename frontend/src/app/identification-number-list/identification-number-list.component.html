@@ -1,0 +1,26 @@
+<h2>Identification Numbers</h2>
+<mat-card>
+    <mat-card-content>
+        <mat-table (matSortChange)="dataSource.setSort($event)" [dataSource]="dataSource" matSort>
+            <ng-container matColumnDef="id">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header="id">ID</th>
+                <td *matCellDef="let element" mat-cell>{{element.id}} </td>
+            </ng-container>
+            <ng-container matColumnDef="number">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header="number">NUMBER</th>
+                <td *matCellDef="let element" mat-cell> {{element.number}} </td>
+            </ng-container>
+            <ng-container matColumnDef="blocked">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header="blocked">BLOCKED</th>
+                <td *matCellDef="let element" mat-cell> {{element.blocked}} </td>
+            </ng-container>
+            <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+            <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+        </mat-table>
+        <mat-paginator (page)="dataSource.setPage($event)"
+                        [length]="dataSource.length"
+                        [pageSizeOptions]="[5, 10, 25]"
+                        [pageSize]="dataSource.size">
+        </mat-paginator>
+    </mat-card-content>
+</mat-card>
