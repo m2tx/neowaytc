@@ -1,0 +1,17 @@
+type IdentificationNumber {
+    id: ID
+    number: String
+    blocked: Boolean
+}
+input IdentificationNumberInput {
+    number: String!
+}
+
+type Query {
+    getIdentificationNumbers: [IdentificationNumber]!
+    getIdentificationNumber(id: ID!): IdentificationNumber
+}
+
+type Mutation {
+    addIdentificationNumber(identificationNumber: IdentificationNumberInput!) : IdentificationNumber!
+}
