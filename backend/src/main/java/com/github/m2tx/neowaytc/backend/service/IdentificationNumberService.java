@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.github.m2tx.neowaytc.backend.exceptions.IdentificationNumberAlreadyExistsException;
+import com.github.m2tx.neowaytc.backend.exceptions.IdentificationNumberUpdateException;
 import com.github.m2tx.neowaytc.backend.model.IdentificationNumber;
 import com.github.m2tx.neowaytc.backend.repository.IdentificationNumberRepository;
 import com.github.m2tx.neowaytc.backend.repository.IdentificationNumberSpecification;
@@ -25,7 +26,7 @@ public class IdentificationNumberService {
 		return repository.findById(id);
 	}
 
-	public IdentificationNumber add(IdentificationNumber identificationNumber) throws IdentificationNumberAlreadyExistsException {
+	public IdentificationNumber newIdentificationNumber(IdentificationNumber identificationNumber) throws IdentificationNumberAlreadyExistsException {
 		if(repository.exists(Example.of(identificationNumber))) {
 			throw new IdentificationNumberAlreadyExistsException();
 		}
@@ -47,5 +48,16 @@ public class IdentificationNumberService {
 
     public Page<IdentificationNumber> query(IdentificationNumberSpecification spec, Pageable pageable) {
 		return repository.findAll(spec,pageable);
+    }
+
+    public void updateIdentificationNumber(IdentificationNumber identificationNumber) throws IdentificationNumberUpdateException {
+		Optional<IdentificationNumber> opt = repository.findById(identificationNumber.getId());
+		if(opt.isPresent()){
+			IdentificationNumber idn = opt.get();
+			idn.setBlocked(identificationNumber.getBlocked());
+			repository.save(idn);
+		}else{
+			throw new IdentificationNumberUpdateException();
+		}
     }
 }
