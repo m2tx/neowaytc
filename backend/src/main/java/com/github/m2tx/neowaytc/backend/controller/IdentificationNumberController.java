@@ -58,8 +58,8 @@ public class IdentificationNumberController {
 		return ResponseEntity.created(location).body(identificationNumber);
     }
 
-	@PutMapping()
-    public ResponseEntity<IdentificationNumber> updateIdentificationNumber(@RequestBody IdentificationNumber identificationNumber) throws IdentificationNumberUpdateException {
+	@PutMapping("/{id}")
+    public ResponseEntity<IdentificationNumber> updateIdentificationNumber(@RequestBody IdentificationNumber identificationNumber,@PathVariable UUID id) throws IdentificationNumberUpdateException {
         service.updateIdentificationNumber(identificationNumber);
 		return ResponseEntity.ok(identificationNumber);
     }

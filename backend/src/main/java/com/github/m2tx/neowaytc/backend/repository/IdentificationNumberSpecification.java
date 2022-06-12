@@ -18,6 +18,22 @@ public class IdentificationNumberSpecification implements Specification<Identifi
     private String number;
     private Boolean blocked;
 
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public Boolean getBlocked() {
+        return blocked;
+    }
+
+    public void setBlocked(Boolean blocked) {
+        this.blocked = blocked;
+    }
+
     @Override
     public Predicate toPredicate(Root<IdentificationNumber> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
         List<Predicate> predicates = new LinkedList<>();
