@@ -31,6 +31,7 @@ public class IdentificationNumberService {
 			throw new IdentificationNumberAlreadyExistsException();
 		}
 		identificationNumber.setId(UUID.randomUUID());
+		identificationNumber.setBlocked(false);
 		return repository.save(identificationNumber);
 	}
 
