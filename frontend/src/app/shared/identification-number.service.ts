@@ -23,7 +23,11 @@ export class IdentificationNumberService {
   ) {}
 
   create(identificationNumber: IdentificationNumber): Observable<IdentificationNumber> {
-    return this.http.post<IdentificationNumber>(`${environment.api}/`, document, HTTP_OPTIONS)
+    return this.http.post<IdentificationNumber>(`${environment.api}/`, identificationNumber, HTTP_OPTIONS)
+  }
+
+  update(identificationNumber: IdentificationNumber): Observable<IdentificationNumber> {
+    return this.http.put<IdentificationNumber>(`${environment.api}/${identificationNumber.id}`, identificationNumber, HTTP_OPTIONS)
   }
 
   findById(id: string): Observable<IdentificationNumber> {

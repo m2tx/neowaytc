@@ -15,13 +15,14 @@ import { Page } from './page.model';
 export class IdentificationNumberDataSource implements DataSource<IdentificationNumber> {
 
   public form: FormGroup = new FormGroup({
-    document: new FormControl(),
+    number: new FormControl(),
     blocked: new FormControl()
   });
   
   sort: Sort = {active: 'number', direction: 'desc'};
   public length: number = 0;
   public size: number = 10;
+  
   private listSubject = new BehaviorSubject<IdentificationNumber[]>([]);
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public loading$ = this.loadingSubject.asObservable();

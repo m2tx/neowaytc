@@ -1,7 +1,29 @@
-<h2>Identification Numbers</h2>
 <mat-card>
+    <mat-card-title>
+        <h2>Identification Numbers</h2>
+    </mat-card-title>
     <mat-card-content>
-        <mat-table (matSortChange)="dataSource.setSort($event)" [dataSource]="dataSource" matSort>
+        <form [formGroup]="dataSource.form" class="search">
+            <mat-form-field appearance="legacy">
+                <mat-icon matPrefix>badge</mat-icon>
+                <input formControlName="number" mask="000.000.000-00||00.000.000/0000-00" matInput placeholder="Identification Number"/>
+            </mat-form-field>
+            <mat-form-field appearance="legacy">
+                <mat-icon matPrefix>block</mat-icon>
+                <mat-label>Blocked</mat-label>
+                <mat-select formControlName="blocked">
+                    <mat-option value="null"></mat-option>
+                    <mat-option value="false">No</mat-option>
+                    <mat-option value="true">Yes</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div>
+                <button (click)="dataSource.init()" mat-raised-button>Search
+                    <mat-icon>search</mat-icon>
+                </button>
+            </div>
+        </form>
+        <table mat-table (matSortChange)="dataSource.setSort($event)" [dataSource]="dataSource" matSort>
             <ng-container matColumnDef="id">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header="id">ID</th>
                 <td *matCellDef="let element" mat-cell>{{element.id}} </td>
@@ -12,11 +34,16 @@
             </ng-container>
             <ng-container matColumnDef="blocked">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header="blocked">BLOCKED</th>
-                <td *matCellDef="let element" mat-cell> {{element.blocked}} </td>
+                <td *matCellDef="let element" mat-cell> 
+                    <mat-checkbox (click)="$event.stopPropagation()"
+                                (change)="$event ? toggle($event,element) : null"
+                                [checked]="element.blocked">
+                    </mat-checkbox>
+                </td>
             </ng-container>
             <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
             <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
-        </mat-table>
+        </table>
         <mat-paginator (page)="dataSource.setPage($event)"
                         [length]="dataSource.length"
                         [pageSizeOptions]="[5, 10, 25]"
