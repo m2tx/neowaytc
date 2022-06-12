@@ -6,7 +6,10 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.github.m2tx.neowaytc.backend.exceptions.IdentificationNumberAlreadyExistsException;
 import com.github.m2tx.neowaytc.backend.model.IdentificationNumber;
+import com.github.m2tx.neowaytc.backend.repository.IdentificationNumberSpecification;
 import com.github.m2tx.neowaytc.backend.service.IdentificationNumberService;
 
 import lombok.AllArgsConstructor;
@@ -29,7 +33,7 @@ public class IdentificationNumberController {
     private final IdentificationNumberService service;
 
 	@GetMapping()
-	public List<IdentificationNumber> getAll(){
+	public Iterable<IdentificationNumber> getAll(){
 		return service.findAll();
 	}
 
@@ -37,6 +41,11 @@ public class IdentificationNumberController {
 	public ResponseEntity<IdentificationNumber> get(@PathVariable UUID id){
 		return ResponseEntity.of(service.findById(id));
 	}
+
+	@PostMapping("/query/")
+    public ResponseEntity<Page<IdentificationNumber>> query(@RequestBody IdentificationNumberSpecification identificationNumber, Pageable pageable) {
+		return ResponseEntity.ok(service.query(identificationNumber,pageable));
+    }
 
     @PostMapping()
     public ResponseEntity<IdentificationNumber> addDocument(@Valid @RequestBody IdentificationNumber identificationNumber) throws IdentificationNumberAlreadyExistsException {
@@ -47,5 +56,11 @@ public class IdentificationNumberController {
                 .toUri();
 		return ResponseEntity.created(location).body(identificationNumber);
     }
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<UUID> delete(@PathVariable UUID id){
+		service.deleteById(id);
+		return ResponseEntity.ok(id);
+	}
     
 }

@@ -1,15 +1,17 @@
 package com.github.m2tx.neowaytc.backend.service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.github.m2tx.neowaytc.backend.exceptions.IdentificationNumberAlreadyExistsException;
 import com.github.m2tx.neowaytc.backend.model.IdentificationNumber;
 import com.github.m2tx.neowaytc.backend.repository.IdentificationNumberRepository;
+import com.github.m2tx.neowaytc.backend.repository.IdentificationNumberSpecification;
 
 import lombok.AllArgsConstructor;
 
@@ -35,11 +37,15 @@ public class IdentificationNumberService {
 		repository.deleteById(id);
 	}
 
-	public List<IdentificationNumber> findAll() {
+	public Iterable<IdentificationNumber> findAll() {
 		return repository.findAll();
 	}
 
     public Long count(){
         return repository.count();
+    }
+
+    public Page<IdentificationNumber> query(IdentificationNumberSpecification spec, Pageable pageable) {
+		return repository.findAll(spec,pageable);
     }
 }

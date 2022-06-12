@@ -31,7 +31,7 @@ export class IdentificationNumberService {
   }
 
   queryBy(params: IdentificationNumber, column: string = 'number', sort: string = 'asc', page: number = 0, size: number = 5): Observable<Page<IdentificationNumber>> {
-    return this.http.post<Page<IdentificationNumber>>(`${environment.api}/?sort=${column},${sort}&page=${page}&size=${size}`, params);
+    return this.http.post<Page<IdentificationNumber>>(`${environment.api}/query/?sort=${column},${sort}&page=${page}&size=${size}`, params);
   }
 
 }
