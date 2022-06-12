@@ -9,25 +9,27 @@ import { IdentificationNumber } from './identification-number.model';
 import { IdentificationNumberService } from './identification-number.service';
 import { Page } from './page.model';
 
-@Injectable({
-    providedIn: 'root'
-})
 export class IdentificationNumberDataSource implements DataSource<IdentificationNumber> {
 
-  public form: FormGroup = new FormGroup({
-    number: new FormControl(),
-    blocked: new FormControl()
-  });
+  public form: FormGroup;
   
   sort: Sort = {active: 'number', direction: 'desc'};
   public length: number = 0;
-  public size: number = 10;
+  public size: number = 5;
   
-  private listSubject = new BehaviorSubject<IdentificationNumber[]>([]);
-  private loadingSubject = new BehaviorSubject<boolean>(false);
-  public loading$ = this.loadingSubject.asObservable();
+  private listSubject:BehaviorSubject<IdentificationNumber[]>;
+  private loadingSubject:BehaviorSubject<boolean>;
+  public loading$:Observable<boolean>;
 
-  constructor(private identificationNumberService: IdentificationNumberService) {}
+  constructor(private identificationNumberService: IdentificationNumberService) {
+    this.listSubject = new BehaviorSubject<IdentificationNumber[]>([]);
+    this.loadingSubject = new BehaviorSubject<boolean>(false);
+    this.loading$ = this.loadingSubject.asObservable();
+    this.form = new FormGroup({
+      number: new FormControl(),
+      blocked: new FormControl()
+    });
+  }
 
   init() {
     this.load(this.form.value, this.sort.active, this.sort.direction, 0, this.size);

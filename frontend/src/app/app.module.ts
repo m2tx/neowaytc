@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { IdentificationNumberFormComponent } from './identification-number-form/identification-number-form.component';
 import { IdentificationNumberListComponent } from './identification-number-list/identification-number-list.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
@@ -17,6 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgxMaskModule } from 'ngx-mask';
 
@@ -24,6 +26,7 @@ import { NgxMaskModule } from 'ngx-mask';
   declarations: [
     AppComponent,
     IdentificationNumberListComponent,
+    IdentificationNumberFormComponent,
   ],
   imports: [
     BrowserModule,
@@ -42,11 +45,13 @@ import { NgxMaskModule } from 'ngx-mask';
     MatIconModule,
     MatSelectModule,
     MatButtonModule,
+    MatSnackBarModule,
     NgxMaskModule.forRoot({
       dropSpecialCharacters: false
     }),
     RouterModule.forRoot([
       { path: '', component: IdentificationNumberListComponent },
+      { path: 'form', component: IdentificationNumberFormComponent }
     ])
   ],
   providers: [],

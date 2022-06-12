@@ -1,6 +1,6 @@
 <mat-card>
     <mat-card-title>
-        <h2>Identification Numbers</h2>
+        <h2>List Component</h2>
     </mat-card-title>
     <mat-card-content>
         <form [formGroup]="dataSource.form" class="search">
@@ -17,7 +17,7 @@
                     <mat-option value="true">Yes</mat-option>
                 </mat-select>
             </mat-form-field>
-            <div>
+            <div class="buttons">
                 <button (click)="dataSource.init()" mat-raised-button>Search
                     <mat-icon>search</mat-icon>
                 </button>
