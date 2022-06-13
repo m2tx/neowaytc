@@ -36,9 +36,9 @@ mvn test
 
 | Method | URI | Description |
 | ------ | ------------------ | --------------------|
-| Get | / | findAll |
-| Get | /{id} | findById |
-| Post | / | new |
-| Put | /{id} | update |
-| Delete | /{id} | delete |
-| Post | /query/ | pageable |
+| GET | /api/identificationnumber/ | findAll |
+| GET | /api/identificationnumber/{id} | findById |
+| POST | /api/identificationnumber/ | new |
+| PUT | /api/identificationnumber/{id} | update |
+| DELETE | /api/identificationnumber/{id} | delete |
+| POST | /api/identificationnumber/query/ | pageable |
