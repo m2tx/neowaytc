@@ -53,7 +53,7 @@ public class IdentificationNumberControllerTest {
         "73953500000111"
     })
 	public void addValidIdentificationNumber(String number) throws JsonProcessingException, Exception {
-		this.mockMvc.perform(post("/")
+		this.mockMvc.perform(post("/api/identificationnumber/")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(mapper.writeValueAsString(IdentificationNumber.builder().number(number).build())))
 		.andDo(print())
@@ -70,7 +70,7 @@ public class IdentificationNumberControllerTest {
         "1234"
     })
 	public void failedToAddInvalidIdentificationNumber(String number) throws JsonProcessingException, Exception {
-		this.mockMvc.perform(post("/")
+		this.mockMvc.perform(post("/api/identificationnumber/")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(mapper.writeValueAsString(IdentificationNumber.builder().number(number).build())))
 		.andDo(print())
@@ -80,7 +80,7 @@ public class IdentificationNumberControllerTest {
 
 	@Test
 	public void queryIdentificationNumber() throws JsonProcessingException, Exception {
-		this.mockMvc.perform(post("/query/")
+		this.mockMvc.perform(post("/api/identificationnumber/query/")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(mapper.writeValueAsString(IdentificationNumber.builder().blocked(true).build())))
 		.andDo(print())
@@ -95,7 +95,7 @@ public class IdentificationNumberControllerTest {
         "35240f60-6a08-4774-becd-826bae221876"
     })
 	public void findByIdIdentificationNumber(String id) throws JsonProcessingException, Exception {
-		this.mockMvc.perform(get("/"+id)
+		this.mockMvc.perform(get("/api/identificationnumber/"+id)
 				.contentType(MediaType.APPLICATION_JSON))
 		.andDo(print())
 		.andExpect(status().isOk())
@@ -107,7 +107,7 @@ public class IdentificationNumberControllerTest {
         "123e4567-e89b-12d3-a456-426614174000"
     })
 	public void notFoundFindByIdIdentificationNumber(String id) throws JsonProcessingException, Exception {
-		this.mockMvc.perform(get("/"+id)
+		this.mockMvc.perform(get("/api/identificationnumber/"+id)
 				.contentType(MediaType.APPLICATION_JSON))
 		.andDo(print())
 		.andExpect(status().isNotFound());
@@ -120,7 +120,7 @@ public class IdentificationNumberControllerTest {
         "35240f60-6a08-4774-becd-826bae221876"
     })
 	public void updateBlockedIdentificationNumber(String id) throws JsonProcessingException, Exception {
-		this.mockMvc.perform(put("/"+id)
+		this.mockMvc.perform(put("/api/identificationnumber/"+id)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(mapper.writeValueAsString(IdentificationNumber.builder().id(UUID.fromString(id)).blocked(true).build())))
 		.andDo(print())
@@ -132,7 +132,7 @@ public class IdentificationNumberControllerTest {
 	@Test
 	public void notFoundUpdateBlockedIdentificationNumber() throws JsonProcessingException, Exception {
 		String id = "123e4567-e89b-12d3-a456-426614174000";
-		this.mockMvc.perform(put("/"+id)
+		this.mockMvc.perform(put("/api/identificationnumber/"+id)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(mapper.writeValueAsString(IdentificationNumber.builder().id(UUID.fromString(id)).blocked(true).build())))
 		.andDo(print())
@@ -147,7 +147,7 @@ public class IdentificationNumberControllerTest {
         "35240f60-6a08-4774-becd-826bae221876"
     })
 	public void deleteIdentificationNumber(String id) throws JsonProcessingException, Exception {
-		this.mockMvc.perform(delete("/"+id)
+		this.mockMvc.perform(delete("/api/identificationnumber/"+id)
 				.contentType(MediaType.APPLICATION_JSON))
 		.andDo(print())
 		.andExpect(status().isOk())

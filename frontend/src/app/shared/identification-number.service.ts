@@ -23,19 +23,19 @@ export class IdentificationNumberService {
   ) {}
 
   create(identificationNumber: IdentificationNumber): Observable<IdentificationNumber> {
-    return this.http.post<IdentificationNumber>(`${environment.api}/`, identificationNumber, HTTP_OPTIONS)
+    return this.http.post<IdentificationNumber>(`${environment.api}/api/identificationnumber/`, identificationNumber, HTTP_OPTIONS)
   }
 
   update(identificationNumber: IdentificationNumber): Observable<IdentificationNumber> {
-    return this.http.put<IdentificationNumber>(`${environment.api}/${identificationNumber.id}`, identificationNumber, HTTP_OPTIONS)
+    return this.http.put<IdentificationNumber>(`${environment.api}/api/identificationnumber/${identificationNumber.id}`, identificationNumber, HTTP_OPTIONS)
   }
 
   findById(id: string): Observable<IdentificationNumber> {
-    return this.http.get<IdentificationNumber>(`${environment.api}/${id}`);
+    return this.http.get<IdentificationNumber>(`${environment.api}/api/identificationnumber/${id}`);
   }
 
   queryBy(params: IdentificationNumber, column: string = 'number', sort: string = 'asc', page: number = 0, size: number = 5): Observable<Page<IdentificationNumber>> {
-    return this.http.post<Page<IdentificationNumber>>(`${environment.api}/query/?sort=${column},${sort}&page=${page}&size=${size}`, params);
+    return this.http.post<Page<IdentificationNumber>>(`${environment.api}/api/identificationnumber/query/?sort=${column},${sort}&page=${page}&size=${size}`, params);
   }
 
 }

@@ -27,7 +27,7 @@ import com.github.m2tx.neowaytc.backend.service.IdentificationNumberService;
 import lombok.AllArgsConstructor;
 
 @RestController()
-@RequestMapping("/")
+@RequestMapping("/api/identificationnumber")
 @AllArgsConstructor
 public class IdentificationNumberController {
 
