@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
-	"github.com/m2tx/neowaytc/backendgo/utils"
+	"github.com/m2tx/neowaytc/backendgo/core/utils"
 )
 
 const (
