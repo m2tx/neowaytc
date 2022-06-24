@@ -33,12 +33,12 @@ public class IdentificationNumberGraphQlController {
         return service.findById(id);
     }
 
-    @MutationMapping
+    @MutationMapping("newIdentificationNumber")
     public IdentificationNumber newIdentificationNumber(@Argument("identificationNumber") @Valid IdentificationNumber identificationNumber) throws IdentificationNumberAlreadyExistsException{
         return service.newIdentificationNumber(identificationNumber);
     }
 
-    @MutationMapping
+    @MutationMapping("updateIdentificationNumber")
     public IdentificationNumber updateIdentificationNumber(@Argument("identificationNumber") @Valid IdentificationNumber identificationNumber) throws IdentificationNumberUpdateException{
         service.updateIdentificationNumber(identificationNumber);
         return identificationNumber;

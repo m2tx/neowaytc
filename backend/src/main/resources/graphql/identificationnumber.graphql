@@ -8,17 +8,17 @@ input IdentificationNumberInput {
     number: String!
 }
 
-input UpdateIdentificationNumberInput {
+input UpdatedIdentificationNumberInput {
     id: ID!
     blocked: Boolean!
 }
 
-type query {
+type Query {
     allIdentificationNumber: [IdentificationNumber]!
     getIdentificationNumberByID(id: ID!): IdentificationNumber
 }
 
-type mutation {
+type Mutation {
     newIdentificationNumber(identificationNumber: IdentificationNumberInput!) : IdentificationNumber!
     updateIdentificationNumber(identificationNumber: UpdateIdentificationNumberInput!) : IdentificationNumber!
 }
