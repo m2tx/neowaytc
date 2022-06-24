@@ -39,7 +39,7 @@ func NewIdentificationNumber(number string) (*IdentificationNumber, error) {
 }
 
 func (identificationNumber *IdentificationNumber) Prepare() error {
-	err := identificationNumber.validate()
+	err := identificationNumber.Validate()
 	if err != nil {
 		return err
 	}
@@ -52,7 +52,7 @@ func (identificationNumber *IdentificationNumber) String() string {
 	return identificationNumber.Number
 }
 
-func (identificationNumber *IdentificationNumber) validate() error {
+func (identificationNumber *IdentificationNumber) Validate() error {
 	s := identificationNumber.Number
 	s = strings.Replace(s, ".", "", -1)
 	s = strings.Replace(s, "/", "", -1)
