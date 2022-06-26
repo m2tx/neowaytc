@@ -25,12 +25,12 @@ func (handler *HTTPHandler) GetAll(c *gin.Context) {
 func (handler *HTTPHandler) GetById(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
-		c.AbortWithStatusJSON(400, gin.H{"message": err.Error()})
+		c.AbortWithStatusJSON(400, []string{err.Error()})
 		return
 	}
 	in, err := handler.service.Get(id)
 	if err != nil {
-		c.AbortWithStatusJSON(400, gin.H{"message": err.Error()})
+		c.AbortWithStatusJSON(400, []string{err.Error()})
 		return
 	}
 	c.JSON(200, in)
@@ -42,7 +42,7 @@ func (handler *HTTPHandler) New(c *gin.Context) {
 
 	in, err := handler.service.New(body.Number)
 	if err != nil {
-		c.AbortWithStatusJSON(500, gin.H{"message": err.Error()})
+		c.AbortWithStatusJSON(500, []string{err.Error()})
 		return
 	}
 
@@ -52,7 +52,7 @@ func (handler *HTTPHandler) New(c *gin.Context) {
 func (handler *HTTPHandler) Update(c *gin.Context) {
 	_, err := uuid.Parse(c.Param("id"))
 	if err != nil {
-		c.AbortWithStatusJSON(400, gin.H{"message": err.Error()})
+		c.AbortWithStatusJSON(400, []string{err.Error()})
 		return
 	}
 	body := domain.IdentificationNumber{}
@@ -60,7 +60,7 @@ func (handler *HTTPHandler) Update(c *gin.Context) {
 
 	err = handler.service.Update(body)
 	if err != nil {
-		c.AbortWithStatusJSON(500, gin.H{"message": err.Error()})
+		c.AbortWithStatusJSON(500, []string{err.Error()})
 		return
 	}
 
