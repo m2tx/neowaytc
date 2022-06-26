@@ -20,6 +20,11 @@ var (
 	srv = NewIdentificationNumberService(rep)
 )
 
+func TestGetAllIdentificationNumberService(t *testing.T) {
+	ins := srv.GetAll()
+	assert.Equal(t, len(ins), len(data))
+}
+
 func TestGetIdentificationNumberService(t *testing.T) {
 	type test struct {
 		Name  string

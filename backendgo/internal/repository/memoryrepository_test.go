@@ -18,6 +18,11 @@ var (
 	rep = NewIdentificationNumberMemoryRepository(data)
 )
 
+func TestGetAllIdentificationNumberMemoryRepository(t *testing.T) {
+	ins := rep.GetAll()
+	assert.Equal(t, len(ins), len(data))
+}
+
 func TestGetIdentificationNumberMemoryRepository(t *testing.T) {
 	type test struct {
 		Name  string

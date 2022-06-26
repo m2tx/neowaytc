@@ -16,6 +16,10 @@ func NewIdentificationNumberService(identificationNumberRepository ports.Identif
 	}
 }
 
+func (srv *service) GetAll() []domain.IdentificationNumber {
+	return srv.identificationNumberRepository.GetAll()
+}
+
 func (srv *service) Get(id uuid.UUID) (domain.IdentificationNumber, error) {
 	identificationNumber, err := srv.identificationNumberRepository.Get(id)
 	if err != nil {

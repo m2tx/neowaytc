@@ -16,6 +16,10 @@ func NewIdentificationNumberMemoryRepository(data []domain.IdentificationNumber)
 	}
 }
 
+func (rep *memory) GetAll() []domain.IdentificationNumber {
+	return rep.data
+}
+
 func (rep *memory) Get(id uuid.UUID) (domain.IdentificationNumber, error) {
 	for i := 0; i < len(rep.data); i++ {
 		if rep.data[i].ID == id {

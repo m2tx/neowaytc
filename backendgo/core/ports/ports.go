@@ -14,12 +14,14 @@ var (
 )
 
 type IdentificationNumberRepository interface {
+	GetAll() []domain.IdentificationNumber
 	Get(id uuid.UUID) (domain.IdentificationNumber, error)
 	Save(identificationNumber domain.IdentificationNumber) error
 	ExitsByNumber(number string) bool
 }
 
 type IdentificationNumberService interface {
+	GetAll() []domain.IdentificationNumber
 	Get(id uuid.UUID) (domain.IdentificationNumber, error)
 	New(number string) (domain.IdentificationNumber, error)
 	Update(identificationNumber domain.IdentificationNumber) error
