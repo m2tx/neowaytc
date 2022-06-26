@@ -20,9 +20,9 @@ var (
 )
 
 type IdentificationNumber struct {
-	ID      uuid.UUID
-	Number  string
-	Blocked bool
+	ID      uuid.UUID `json:"id" gorm:"primaryKey"`
+	Number  string    `json:"number"`
+	Blocked bool      `json:"blocked"`
 }
 
 func NewIdentificationNumber(number string) (*IdentificationNumber, error) {
@@ -54,6 +54,7 @@ func (identificationNumber *IdentificationNumber) String() string {
 
 func (identificationNumber *IdentificationNumber) Validate() error {
 	s := identificationNumber.Number
+	//TODO - VALIDATE PATTERN
 	s = strings.Replace(s, ".", "", -1)
 	s = strings.Replace(s, "/", "", -1)
 	s = strings.Replace(s, "-", "", -1)
