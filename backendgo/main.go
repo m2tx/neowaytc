@@ -30,6 +30,7 @@ func main() {
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(200, status)
 	})
+	router.GET("/api/identificationnumber/", httpHandler.GetAll)
 	router.GET("/api/identificationnumber/:id", httpHandler.GetById)
 	router.POST("/api/identificationnumber/", httpHandler.New)
 	router.PUT("/api/identificationnumber/:id", httpHandler.Update)

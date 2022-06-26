@@ -17,6 +17,11 @@ func NewHTTPHandler(service ports.IdentificationNumberService) *HTTPHandler {
 	}
 }
 
+func (handler *HTTPHandler) GetAll(c *gin.Context) {
+	ins := handler.service.GetAll()
+	c.JSON(200, ins)
+}
+
 func (handler *HTTPHandler) GetById(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
