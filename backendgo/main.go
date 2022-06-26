@@ -29,14 +29,18 @@ func main() {
 
 	gin.SetMode(mode)
 	router := gin.New()
+	log.Println("Configuring CORSMiddleware")
 	router.Use(CORSMiddleware())
+	log.Println("Metrics Endpoint GET /metrics")
 	m := ginmetrics.GetMonitor()
 	m.SetMetricPath("/metrics")
 	m.Use(router)
+	log.Println("Health Endpoint GET /health")
 	router.GET("/health", func(c *gin.Context) {
 		log.Println(status)
 		c.JSON(200, status)
 	})
+	log.Println("Configuring HttpHandler")
 	httpHandler.Handler(router)
 	log.Println("BACKENDGO - RUNNING ON 8081")
 	router.Run(":8081")
