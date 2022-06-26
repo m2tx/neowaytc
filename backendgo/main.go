@@ -26,6 +26,7 @@ func main() {
 	repository := repository.NewIdentificationNumberPostgresRepository(dbUrl)
 	service := services.NewIdentificationNumberService(repository)
 	httpHandler := handler.NewHTTPHandler(service)
+	graphQlHandler := handler.NewGraphQlHandler(service)
 
 	gin.SetMode(mode)
 	router := gin.New()
@@ -42,6 +43,8 @@ func main() {
 	})
 	log.Println("Configuring HttpHandler")
 	httpHandler.Handler(router)
+	log.Println("Configuring GraphQlHandler")
+	graphQlHandler.Handler(router)
 	log.Println("BACKENDGO - RUNNING ON 8081")
 	router.Run(":8081")
 
