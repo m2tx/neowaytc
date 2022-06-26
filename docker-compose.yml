@@ -14,7 +14,7 @@ services:
       restart_policy:
         condition: on-failure
   frontend:
-    image: m2tx/neowaytc-frontend:0.0.1
+    image: m2tx/neowaytc-frontend:0.0.2
     healthcheck:
       test: "service nginx status || exit 1"
       interval: 30s
@@ -27,7 +27,7 @@ services:
       restart_policy:
         condition: on-failure
   backend:
-    image: m2tx/neowaytc-backend:0.0.1
+    image: m2tx/neowaytc-backend:0.0.2
     healthcheck:
       test: "curl --fail --silent http://localhost:8080/actuator/health | grep UP || exit 1"
       interval: 30s
@@ -38,6 +38,25 @@ services:
       - "SPRING_PROFILES_ACTIVE=production"
     ports:
       - 8080:8080
+    depends_on:
+      - "postgres12"
+    deploy:
+      restart_policy:
+        condition: on-failure
+  backendgo:
+    image: m2tx/neowaytc-backendgo:0.0.1
+    healthcheck:
+      test: "curl --fail --silent http://localhost:8081/health | grep UP || exit 1"
+      interval: 30s
+      timeout: 30s
+      retries: 3
+      start_period: 30s
+    environment:
+      - "DB_URL=postgres://postgres:password@postgres12:5432/db"
+    ports:
+      - 8081:8081
+    depends_on:
+      - "postgres12"
     deploy:
       restart_policy:
         condition: on-failure
