@@ -86,7 +86,10 @@ func (handler *HTTPHandler) Update(c *gin.Context) {
 
 func (handler *HTTPHandler) Query(c *gin.Context) {
 	params := make(map[string]string)
-	c.BindJSON(&params)
+	if err := c.ShouldBindJSON(&params); err != nil {
+		c.JSON(http.StatusBadRequest, []string{err.Error()})
+		return
+	}
 	pageIndex := utils.StringToInt(c.Query("page"))
 	size := utils.StringToInt(c.Query("size"))
 	sort, _ := domain.ParseSort(c.Query("sort"))
@@ -95,12 +98,10 @@ func (handler *HTTPHandler) Query(c *gin.Context) {
 		PageSize: size,
 		Sort:     sort,
 	}
-
 	page, err := handler.service.Query(params, pageable)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, []string{err.Error()})
 		return
 	}
-
 	c.JSON(http.StatusOK, page)
 }

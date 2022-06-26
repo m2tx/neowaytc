@@ -51,12 +51,12 @@ func TestGetIdentificationNumberHandler(t *testing.T) {
 		ID       string
 		Expected int
 	}
-	numbers := []test{
+	tests := []test{
 		{"StatusOK", "789c728f-8fa2-494b-8db1-18808a5c61d8", http.StatusOK},
 		{"StatusNotFound", "123e4567-e89b-12d3-a456-426614174000", http.StatusNotFound},
 		{"StatusBadRequest", "10", http.StatusBadRequest},
 	}
-	for _, nb := range numbers {
+	for _, nb := range tests {
 		t.Run(nb.Name, func(t *testing.T) {
 			req, _ := http.NewRequest("GET", "/api/identificationnumber/"+nb.ID, nil)
 			w := httptest.NewRecorder()
@@ -78,12 +78,12 @@ func TestNewIdentificationNumberHandler(t *testing.T) {
 		Number   string
 		Expected int
 	}
-	numbers := []test{
+	tests := []test{
 		{"StatusCreated", "103.742.240-64", http.StatusCreated},
 		{"StatusInternalServerErrorWithExits", "046.847.189-80", http.StatusInternalServerError},
 		{"StatusInternalServerErrorWithInvalidCPF", "046.847.189-81", http.StatusInternalServerError},
 	}
-	for _, nb := range numbers {
+	for _, nb := range tests {
 		t.Run(nb.Name, func(t *testing.T) {
 			in := &domain.IdentificationNumber{
 				Number: nb.Number,
@@ -111,12 +111,12 @@ func TestUpdateIdentificationNumberHandler(t *testing.T) {
 		Json     string
 		Expected int
 	}
-	numbers := []test{
+	tests := []test{
 		{"StatusOK1", "789c728f-8fa2-494b-8db1-18808a5c61d8", "{\"id\":\"789c728f-8fa2-494b-8db1-18808a5c61d8\", \"number\":\"046.847.189-80\", \"blocked\":false}", http.StatusOK},
 		{"StatusOK2", "8ccf972c-6f24-4df3-ac65-b94853c10744", "{\"id\":\"8ccf972c-6f24-4df3-ac65-b94853c10744\", \"number\":\"585.629.410-69\", \"blocked\":false}", http.StatusOK},
 		{"StatusBadRequest", "8ccf972c-6f24-4df3-ac65-b94853c10744", "{x:'bad_request', number:null, blocked:false}", http.StatusBadRequest},
 	}
-	for _, nb := range numbers {
+	for _, nb := range tests {
 		t.Run(nb.Name, func(t *testing.T) {
 			req, _ := http.NewRequest("PUT", "/api/identificationnumber/"+nb.ID, bytes.NewBuffer([]byte(nb.Json)))
 			w := httptest.NewRecorder()
@@ -130,4 +130,33 @@ func TestUpdateIdentificationNumberHandler(t *testing.T) {
 		})
 	}
 
+}
+
+func TestQueryIdentificationNumberHandler(t *testing.T) {
+	type test struct {
+		Name     string
+		Query    string
+		Params   string
+		Expected int
+	}
+	tests := []test{
+		{"StatusOK1", "?sort=id,asc&page=0&size=5", "{\"blocked\":\"false\"}", http.StatusOK},
+		{"StatusOK2", "?sort=number,asc&page=0&size=5", "{\"number\":\"585.629.410-69\"}", http.StatusOK},
+		{"StatusBadRequest", "?sort=blocked,asc&page=0&size=5", "", http.StatusBadRequest},
+	}
+	for _, nb := range tests {
+		t.Run(nb.Name, func(t *testing.T) {
+			req, _ := http.NewRequest("POST", "/api/identificationnumber/query/"+nb.Query, bytes.NewBuffer([]byte(nb.Params)))
+			w := httptest.NewRecorder()
+			router.ServeHTTP(w, req)
+
+			assert.Equal(t, nb.Expected, w.Code)
+			if w.Code == http.StatusOK {
+				var page domain.Page
+				json.Unmarshal(w.Body.Bytes(), &page)
+				assert.NotEmpty(t, page.Content)
+				assert.Greater(t, len(page.Content), 0)
+			}
+		})
+	}
 }
