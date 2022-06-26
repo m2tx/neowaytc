@@ -22,3 +22,7 @@ func TestAllDigitsEqualsFalse(t *testing.T) {
 func TestToInt(t *testing.T) {
 	assert.Equal(t, ToInt("1"[0]), 1)
 }
+
+func TestStringToInt(t *testing.T) {
+	assert.Equal(t, StringToInt("100"), 100)
+}

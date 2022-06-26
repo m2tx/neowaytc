@@ -1,5 +1,7 @@
 package utils
 
+import "strconv"
+
 func AllDigitsEquals(number string) bool {
 	n := number[0]
 	for i := 1; i < len(number); i++ {
@@ -20,4 +22,12 @@ func Reverse(s string) string {
 
 func ToInt(n byte) int {
 	return int(n - '0')
+}
+
+func StringToInt(n string) int {
+	nb, err := strconv.Atoi(n)
+	if err != nil {
+		return 0
+	}
+	return nb
 }
