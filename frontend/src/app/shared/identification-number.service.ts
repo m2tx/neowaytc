@@ -35,7 +35,7 @@ export class IdentificationNumberService {
   }
 
   queryBy(params: any, column: string = 'number', sort: string = 'asc', page: number = 0, size: number = 5): Observable<Page<IdentificationNumber>> {
-    Object.keys(params).forEach((key) => (params[key] == null || params[key] == 'null') && delete params[key]);
+    Object.keys(params).forEach((key) => (params[key] == null || params[key] == 'null' || params[key] == '') && delete params[key]);
     return this.http.post<Page<IdentificationNumber>>(`${environment.api}/api/identificationnumber/query/?sort=${column},${sort}&page=${page}&size=${size}`, params);
   }
 
