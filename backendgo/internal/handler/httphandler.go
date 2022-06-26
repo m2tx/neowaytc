@@ -42,7 +42,7 @@ func (handler *HTTPHandler) GetById(c *gin.Context) {
 	}
 	in, err := handler.service.Get(id)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, []string{err.Error()})
+		c.AbortWithStatusJSON(http.StatusNotFound, []string{err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, in)

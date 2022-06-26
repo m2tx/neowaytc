@@ -34,6 +34,39 @@ func setUpRouter() *gin.Engine {
 	return router
 }
 
+func TestGetAllIdentificationNumberHandler(t *testing.T) {
+	req, _ := http.NewRequest("GET", "/api/identificationnumber/", nil)
+	w := httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+	var ins []domain.IdentificationNumber
+	json.Unmarshal(w.Body.Bytes(), &ins)
+	assert.Equal(t, http.StatusOK, w.Code)
+	assert.NotEmpty(t, ins)
+
+}
+
+func TestGetIdentificationNumberHandler(t *testing.T) {
+	type test struct {
+		Name     string
+		ID       uuid.UUID
+		Expected int
+	}
+	numbers := []test{
+		{"StatusOK", uuid.MustParse("789c728f-8fa2-494b-8db1-18808a5c61d8"), http.StatusOK},
+		{"StatusNotFound", uuid.MustParse("123e4567-e89b-12d3-a456-426614174000"), http.StatusNotFound},
+	}
+	for _, nb := range numbers {
+		t.Run(nb.Name, func(t *testing.T) {
+			req, _ := http.NewRequest("GET", "/api/identificationnumber/"+nb.ID.String(), nil)
+
+			w := httptest.NewRecorder()
+			router.ServeHTTP(w, req)
+			assert.Equal(t, nb.Expected, w.Code)
+		})
+	}
+
+}
+
 func TestNewIdentificationNumberHandler(t *testing.T) {
 	type test struct {
 		Name     string
