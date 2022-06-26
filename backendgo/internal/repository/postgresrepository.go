@@ -52,10 +52,17 @@ func (rep *pgrep) ExitsByNumber(number string) bool {
 func (rep *pgrep) Query(params map[string]string, pageable domain.Pageable) (domain.Page, error) {
 	ins := []domain.IdentificationNumber{}
 	totalElements := int64(0)
-	result := rep.db.Where(params)
-	result.Count(&totalElements)
-	result.Order(fmt.Sprintf("%s %s", pageable.Sort.Active, pageable.Sort.Direction))
-	result.Offset(pageable.Page * pageable.PageSize).Limit(pageable.PageSize).Find(&ins)
+	rep.db.
+		Model(domain.IdentificationNumber{}).
+		Where(params).
+		Count(&totalElements)
+	rep.db.
+		Offset(pageable.Page * pageable.PageSize).
+		Limit(pageable.PageSize).
+		Order(fmt.Sprintf("%s %s", pageable.Sort.Active, pageable.Sort.Direction)).
+		Model(domain.IdentificationNumber{}).
+		Where(params).
+		Find(&ins)
 	return domain.Page{
 		Content:       ins,
 		TotalElements: int(totalElements),

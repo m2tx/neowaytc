@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -88,13 +87,12 @@ func (handler *HTTPHandler) Update(c *gin.Context) {
 func (handler *HTTPHandler) Query(c *gin.Context) {
 	params := make(map[string]string)
 	c.BindJSON(&params)
-	sort, err := domain.ParseSort(c.Param("sort"))
-	if err != nil {
-		log.Println(err.Error())
-	}
+	pageIndex := utils.StringToInt(c.Query("page"))
+	size := utils.StringToInt(c.Query("size"))
+	sort, _ := domain.ParseSort(c.Query("sort"))
 	pageable := domain.Pageable{
-		Page:     utils.StringToInt(c.Param("page")),
-		PageSize: utils.StringToInt(c.Param("size")),
+		Page:     pageIndex,
+		PageSize: size,
 		Sort:     sort,
 	}
 
