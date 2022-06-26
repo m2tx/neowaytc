@@ -2,6 +2,7 @@ package handler
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -20,54 +21,68 @@ func NewHTTPHandler(service ports.IdentificationNumberService) *HTTPHandler {
 	}
 }
 
+func (handler *HTTPHandler) Handler(router *gin.Engine) {
+	router.GET("/api/identificationnumber/", handler.GetAll)
+	router.GET("/api/identificationnumber/:id", handler.GetById)
+	router.POST("/api/identificationnumber/", handler.New)
+	router.PUT("/api/identificationnumber/:id", handler.Update)
+	router.POST("/api/identificationnumber/query/", handler.Query)
+}
+
 func (handler *HTTPHandler) GetAll(c *gin.Context) {
 	ins := handler.service.GetAll()
-	c.JSON(200, ins)
+	c.JSON(http.StatusOK, ins)
 }
 
 func (handler *HTTPHandler) GetById(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
-		c.AbortWithStatusJSON(400, []string{err.Error()})
+		c.AbortWithStatusJSON(http.StatusBadRequest, []string{err.Error()})
 		return
 	}
 	in, err := handler.service.Get(id)
 	if err != nil {
-		c.AbortWithStatusJSON(400, []string{err.Error()})
+		c.AbortWithStatusJSON(http.StatusBadRequest, []string{err.Error()})
 		return
 	}
-	c.JSON(200, in)
+	c.JSON(http.StatusOK, in)
 }
 
 func (handler *HTTPHandler) New(c *gin.Context) {
-	body := domain.IdentificationNumber{}
-	c.BindJSON(&body)
-
+	var body struct {
+		Number string
+	}
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.JSON(http.StatusBadRequest, []string{err.Error()})
+		return
+	}
 	in, err := handler.service.New(body.Number)
 	if err != nil {
-		c.AbortWithStatusJSON(500, []string{err.Error()})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, []string{err.Error()})
 		return
 	}
 
-	c.JSON(201, in)
+	c.JSON(http.StatusCreated, in)
 }
 
 func (handler *HTTPHandler) Update(c *gin.Context) {
 	_, err := uuid.Parse(c.Param("id"))
 	if err != nil {
-		c.AbortWithStatusJSON(400, []string{err.Error()})
+		c.AbortWithStatusJSON(http.StatusBadRequest, []string{err.Error()})
 		return
 	}
-	body := domain.IdentificationNumber{}
-	c.BindJSON(&body)
-
+	var body domain.IdentificationNumber
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.JSON(http.StatusBadRequest, []string{err.Error()})
+		return
+	}
 	err = handler.service.Update(body)
 	if err != nil {
-		c.AbortWithStatusJSON(500, []string{err.Error()})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, []string{err.Error()})
 		return
 	}
 
-	c.JSON(200, body)
+	c.JSON(http.StatusOK, body)
 }
 
 func (handler *HTTPHandler) Query(c *gin.Context) {
@@ -85,9 +100,9 @@ func (handler *HTTPHandler) Query(c *gin.Context) {
 
 	page, err := handler.service.Query(params, pageable)
 	if err != nil {
-		c.AbortWithStatusJSON(500, []string{err.Error()})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, []string{err.Error()})
 		return
 	}
 
-	c.JSON(200, page)
+	c.JSON(http.StatusOK, page)
 }

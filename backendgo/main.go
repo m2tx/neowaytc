@@ -21,10 +21,13 @@ var (
 
 func main() {
 	dbUrl := os.Getenv("DB_URL")
+	mode := os.Getenv("MODE")
+
 	repository := repository.NewIdentificationNumberPostgresRepository(dbUrl)
 	service := services.NewIdentificationNumberService(repository)
 	httpHandler := handler.NewHTTPHandler(service)
 
+	gin.SetMode(mode)
 	router := gin.New()
 	m := ginmetrics.GetMonitor()
 	m.SetMetricPath("/metrics")
@@ -33,10 +36,8 @@ func main() {
 		log.Println(status)
 		c.JSON(200, status)
 	})
-	router.GET("/api/identificationnumber/", httpHandler.GetAll)
-	router.GET("/api/identificationnumber/:id", httpHandler.GetById)
-	router.POST("/api/identificationnumber/", httpHandler.New)
-	router.PUT("/api/identificationnumber/:id", httpHandler.Update)
-	router.POST("/api/identificationnumber/query/", httpHandler.Query)
+	httpHandler.Handler(router)
+	log.Println("BACKENDGO - RUNNING ON 8081")
 	router.Run(":8081")
+
 }
