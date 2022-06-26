@@ -21,6 +21,12 @@ func NewIdentificationNumberPostgresRepository(url string) *pgrep {
 	}
 }
 
+func (rep *pgrep) GetAll() []domain.IdentificationNumber {
+	ins := []domain.IdentificationNumber{}
+	rep.db.Find(&ins)
+	return ins
+}
+
 func (rep *pgrep) Get(id uuid.UUID) (domain.IdentificationNumber, error) {
 	identificationNumber := &domain.IdentificationNumber{}
 	rep.db.Where(&domain.IdentificationNumber{ID: id}).First(&identificationNumber)
