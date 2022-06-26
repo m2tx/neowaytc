@@ -6,17 +6,17 @@ import (
 	"github.com/m2tx/neowaytc/backendgo/core/ports"
 )
 
-type repository struct {
+type memory struct {
 	data []domain.IdentificationNumber
 }
 
-func NewIdentificationNumberMemoryRepository(data []domain.IdentificationNumber) *repository {
-	return &repository{
+func NewIdentificationNumberMemoryRepository(data []domain.IdentificationNumber) *memory {
+	return &memory{
 		data: data,
 	}
 }
 
-func (rep *repository) Get(id uuid.UUID) (domain.IdentificationNumber, error) {
+func (rep *memory) Get(id uuid.UUID) (domain.IdentificationNumber, error) {
 	for i := 0; i < len(rep.data); i++ {
 		if rep.data[i].ID == id {
 			return rep.data[i], nil
@@ -25,7 +25,7 @@ func (rep *repository) Get(id uuid.UUID) (domain.IdentificationNumber, error) {
 	return domain.IdentificationNumber{}, ports.ErrorNotFoundIdentificationNumber
 }
 
-func (rep *repository) Save(identificationNumber domain.IdentificationNumber) error {
+func (rep *memory) Save(identificationNumber domain.IdentificationNumber) error {
 	for i := 0; i < len(rep.data); i++ {
 		if rep.data[i].ID == identificationNumber.ID {
 			rep.data[i] = identificationNumber
@@ -36,7 +36,7 @@ func (rep *repository) Save(identificationNumber domain.IdentificationNumber) er
 	return nil
 }
 
-func (rep *repository) ExitsByNumber(number string) bool {
+func (rep *memory) ExitsByNumber(number string) bool {
 	for i := 0; i < len(rep.data); i++ {
 		if rep.data[i].Number == number {
 			return true
