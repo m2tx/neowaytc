@@ -48,20 +48,25 @@ func TestGetAllIdentificationNumberHandler(t *testing.T) {
 func TestGetIdentificationNumberHandler(t *testing.T) {
 	type test struct {
 		Name     string
-		ID       uuid.UUID
+		ID       string
 		Expected int
 	}
 	numbers := []test{
-		{"StatusOK", uuid.MustParse("789c728f-8fa2-494b-8db1-18808a5c61d8"), http.StatusOK},
-		{"StatusNotFound", uuid.MustParse("123e4567-e89b-12d3-a456-426614174000"), http.StatusNotFound},
+		{"StatusOK", "789c728f-8fa2-494b-8db1-18808a5c61d8", http.StatusOK},
+		{"StatusNotFound", "123e4567-e89b-12d3-a456-426614174000", http.StatusNotFound},
+		{"StatusBadRequest", "10", http.StatusBadRequest},
 	}
 	for _, nb := range numbers {
 		t.Run(nb.Name, func(t *testing.T) {
-			req, _ := http.NewRequest("GET", "/api/identificationnumber/"+nb.ID.String(), nil)
-
+			req, _ := http.NewRequest("GET", "/api/identificationnumber/"+nb.ID, nil)
 			w := httptest.NewRecorder()
 			router.ServeHTTP(w, req)
 			assert.Equal(t, nb.Expected, w.Code)
+			if w.Code == http.StatusOK {
+				var in domain.IdentificationNumber
+				json.Unmarshal(w.Body.Bytes(), &in)
+				assert.Equal(t, uuid.MustParse(nb.ID), in.ID)
+			}
 		})
 	}
 
@@ -89,6 +94,11 @@ func TestNewIdentificationNumberHandler(t *testing.T) {
 			w := httptest.NewRecorder()
 			router.ServeHTTP(w, req)
 			assert.Equal(t, nb.Expected, w.Code)
+			if w.Code == http.StatusCreated {
+				var in domain.IdentificationNumber
+				json.Unmarshal(w.Body.Bytes(), &in)
+				assert.NotEqual(t, uuid.Nil, in.ID)
+			}
 		})
 	}
 
@@ -96,23 +106,27 @@ func TestNewIdentificationNumberHandler(t *testing.T) {
 
 func TestUpdateIdentificationNumberHandler(t *testing.T) {
 	type test struct {
-		Name                 string
-		IdentificationNumber domain.IdentificationNumber
-		Expected             int
+		Name     string
+		ID       string
+		Json     string
+		Expected int
 	}
 	numbers := []test{
-		{"StatusOK", domain.IdentificationNumber{uuid.MustParse("789c728f-8fa2-494b-8db1-18808a5c61d8"), "046.847.189-80", false}, http.StatusOK},
-		{"StatusOK", domain.IdentificationNumber{uuid.MustParse("8ccf972c-6f24-4df3-ac65-b94853c10744"), "585.629.410-69", false}, http.StatusOK},
+		{"StatusOK1", "789c728f-8fa2-494b-8db1-18808a5c61d8", "{\"id\":\"789c728f-8fa2-494b-8db1-18808a5c61d8\", \"number\":\"046.847.189-80\", \"blocked\":false}", http.StatusOK},
+		{"StatusOK2", "8ccf972c-6f24-4df3-ac65-b94853c10744", "{\"id\":\"8ccf972c-6f24-4df3-ac65-b94853c10744\", \"number\":\"585.629.410-69\", \"blocked\":false}", http.StatusOK},
+		{"StatusBadRequest", "8ccf972c-6f24-4df3-ac65-b94853c10744", "{x:'bad_request', number:null, blocked:false}", http.StatusBadRequest},
 	}
 	for _, nb := range numbers {
 		t.Run(nb.Name, func(t *testing.T) {
-			in := nb.IdentificationNumber
-			jsonValue, _ := json.Marshal(in)
-			req, _ := http.NewRequest("PUT", "/api/identificationnumber/"+nb.IdentificationNumber.ID.String(), bytes.NewBuffer(jsonValue))
-
+			req, _ := http.NewRequest("PUT", "/api/identificationnumber/"+nb.ID, bytes.NewBuffer([]byte(nb.Json)))
 			w := httptest.NewRecorder()
 			router.ServeHTTP(w, req)
 			assert.Equal(t, nb.Expected, w.Code)
+			if w.Code == http.StatusOK {
+				var in domain.IdentificationNumber
+				json.Unmarshal(w.Body.Bytes(), &in)
+				assert.Equal(t, uuid.MustParse(nb.ID), in.ID)
+			}
 		})
 	}
 
