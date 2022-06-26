@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/m2tx/neowaytc/backendgo/core/domain"
 	"github.com/m2tx/neowaytc/backendgo/core/ports"
-	"github.com/m2tx/neowaytc/backendgo/internal"
+	"github.com/m2tx/neowaytc/backendgo/internal/repository"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -16,8 +16,8 @@ var (
 		{uuid.MustParse("8ccf972c-6f24-4df3-ac65-b94853c10744"), "585.629.410-69", false},
 		{uuid.MustParse("35240f60-6a08-4774-becd-826bae221876"), "335.796.160-13", true},
 	}
-	repository = internal.NewIdentificationNumberMemoryRepository(data)
-	srv        = NewIdentificationNumberService(repository)
+	rep = repository.NewIdentificationNumberMemoryRepository(data)
+	srv = NewIdentificationNumberService(rep)
 )
 
 func TestGetIdentificationNumberService(t *testing.T) {
