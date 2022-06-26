@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -19,7 +20,8 @@ var (
 )
 
 func main() {
-	repository := repository.NewIdentificationNumberPostgresRepository(os.Getenv("DB_URL"))
+	dbUrl := os.Getenv("DB_URL")
+	repository := repository.NewIdentificationNumberPostgresRepository(dbUrl)
 	service := services.NewIdentificationNumberService(repository)
 	httpHandler := handler.NewHTTPHandler(service)
 
@@ -28,11 +30,13 @@ func main() {
 	m.SetMetricPath("/metrics")
 	m.Use(router)
 	router.GET("/health", func(c *gin.Context) {
+		log.Println(status)
 		c.JSON(200, status)
 	})
 	router.GET("/api/identificationnumber/", httpHandler.GetAll)
 	router.GET("/api/identificationnumber/:id", httpHandler.GetById)
 	router.POST("/api/identificationnumber/", httpHandler.New)
 	router.PUT("/api/identificationnumber/:id", httpHandler.Update)
+	router.POST("/api/identificationnumber/query/", httpHandler.Query)
 	router.Run(":8081")
 }

@@ -1,10 +1,13 @@
 package handler
 
 import (
+	"log"
+
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/m2tx/neowaytc/backendgo/core/domain"
 	"github.com/m2tx/neowaytc/backendgo/core/ports"
+	"github.com/m2tx/neowaytc/backendgo/core/utils"
 )
 
 type HTTPHandler struct {
@@ -65,4 +68,26 @@ func (handler *HTTPHandler) Update(c *gin.Context) {
 	}
 
 	c.JSON(200, body)
+}
+
+func (handler *HTTPHandler) Query(c *gin.Context) {
+	params := make(map[string]string)
+	c.BindJSON(&params)
+	sort, err := domain.ParseSort(c.Param("sort"))
+	if err != nil {
+		log.Println(err.Error())
+	}
+	pageable := domain.Pageable{
+		Page:     utils.StringToInt(c.Param("page")),
+		PageSize: utils.StringToInt(c.Param("size")),
+		Sort:     sort,
+	}
+
+	page, err := handler.service.Query(params, pageable)
+	if err != nil {
+		c.AbortWithStatusJSON(500, []string{err.Error()})
+		return
+	}
+
+	c.JSON(200, page)
 }

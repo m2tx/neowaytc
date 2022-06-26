@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"fmt"
+
 	"github.com/google/uuid"
 	"github.com/m2tx/neowaytc/backendgo/core/domain"
 	"github.com/m2tx/neowaytc/backendgo/core/ports"
@@ -45,4 +47,18 @@ func (rep *pgrep) ExitsByNumber(number string) bool {
 	identificationNumber := &domain.IdentificationNumber{}
 	rep.db.Where(&domain.IdentificationNumber{Number: number}).First(&identificationNumber)
 	return identificationNumber.ID != uuid.Nil
+}
+
+func (rep *pgrep) Query(params map[string]string, pageable domain.Pageable) (domain.Page, error) {
+	ins := []domain.IdentificationNumber{}
+	totalElements := int64(0)
+	result := rep.db.Where(params)
+	result.Count(&totalElements)
+	result.Order(fmt.Sprintf("%s %s", pageable.Sort.Active, pageable.Sort.Direction))
+	result.Offset(pageable.Page * pageable.PageSize).Limit(pageable.PageSize).Find(&ins)
+	return domain.Page{
+		Content:       ins,
+		TotalElements: int(totalElements),
+		Size:          pageable.PageSize,
+	}, nil
 }

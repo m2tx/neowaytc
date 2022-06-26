@@ -80,3 +80,18 @@ func TestExitsByNumberIdentificationNumberMemoryRepository(t *testing.T) {
 		})
 	}
 }
+
+func TestQueryIdentificationNumberMemoryRepository(t *testing.T) {
+	params := map[string]string{
+		"blocked": "false",
+	}
+	sort, err := domain.ParseSort("id,asc")
+	pageable := domain.Pageable{
+		Page:     1,
+		PageSize: 5,
+		Sort:     sort,
+	}
+	page, err := rep.Query(params, pageable)
+	assert.Equal(t, nil, err)
+	assert.Equal(t, len(page.Content), page.TotalElements)
+}

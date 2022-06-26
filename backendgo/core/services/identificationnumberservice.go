@@ -50,3 +50,11 @@ func (srv *service) Update(identificationNumber domain.IdentificationNumber) err
 	}
 	return srv.identificationNumberRepository.Save(identificationNumber)
 }
+
+func (srv *service) Query(params map[string]string, pageable domain.Pageable) (domain.Page, error) {
+	page, err := srv.identificationNumberRepository.Query(params, pageable)
+	if err != nil {
+		return domain.Page{}, err
+	}
+	return page, nil
+}
