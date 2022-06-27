@@ -53,10 +53,6 @@ func (rep *memory) Query(params map[string]string, pageable domain.Pageable) (do
 	content := []domain.IdentificationNumber{}
 	for i := 0; i < len(rep.data); i++ {
 		cond := true
-		//number := params["number"].(string)
-		//cond = cond && (number == "" || rep.data[i].Number == params["number"].(string))
-		//blocked, err := strconv.ParseBool(params["blocked"].(string))
-		//cond = cond && err != nil && rep.data[i].Blocked == blocked
 		if cond {
 			content = append(content, rep.data[i])
 		}

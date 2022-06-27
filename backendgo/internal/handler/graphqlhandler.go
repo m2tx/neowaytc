@@ -14,7 +14,6 @@ import (
 var (
 	identificationNumberType *graphql.Object
 	queryType                *graphql.Object
-	mutationType             *graphql.Object
 	schema                   graphql.Schema
 )
 

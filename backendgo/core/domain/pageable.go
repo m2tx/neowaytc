@@ -5,6 +5,10 @@ import (
 	"strings"
 )
 
+var (
+	ErrorParseSortReceivedBlankValued = errors.New("ParseSort received a blank valued")
+)
+
 type Page struct {
 	Content       []IdentificationNumber `json:"content"`
 	TotalElements int                    `json:"totalElements"`
@@ -27,7 +31,7 @@ func ParseSort(value string) (Sort, error) {
 		return Sort{
 			Active:    "id",
 			Direction: "asc",
-		}, errors.New("ParseSort received a blank valued")
+		}, ErrorParseSortReceivedBlankValued
 	}
 	arg := strings.Split(value, ",")
 	sort := Sort{

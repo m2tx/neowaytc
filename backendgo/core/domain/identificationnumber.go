@@ -14,9 +14,9 @@ const (
 )
 
 var (
-	ErrorInvalidIdentificationNumber     = errors.New("invalid-identification-number")
-	ErrorInvalidIdentificationNumberCPF  = errors.New("invalid-identification-number-cpf")
-	ErrorInvalidIdentificationNumberCNPJ = errors.New("invalid-identification-number-cnpj")
+	ErrorInvalidIdentificationNumber     = errors.New("Invalid identification number")
+	ErrorInvalidIdentificationNumberCPF  = errors.New("Invalid identification number CPF")
+	ErrorInvalidIdentificationNumberCNPJ = errors.New("Invalid identification number CNPJ")
 )
 
 type IdentificationNumber struct {

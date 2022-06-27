@@ -8,9 +8,9 @@ import (
 )
 
 var (
-	ErrorNotFoundIdentificationNumber       = errors.New("identification-number-not-found")
-	ErrorNotFoundIdentificationNumberUpdate = errors.New("identification-number-not-found-to-update")
-	ErrorExitsIdentificationNumber          = errors.New("identification-number-exits")
+	ErrorNotFoundIdentificationNumber       = errors.New("Identification number not found")
+	ErrorNotFoundIdentificationNumberUpdate = errors.New("Identification number not found to update")
+	ErrorExitsIdentificationNumber          = errors.New("Identification number exits")
 )
 
 type IdentificationNumberRepository interface {
