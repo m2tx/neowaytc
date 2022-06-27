@@ -43,3 +43,16 @@ go test -cover ./...
 | GET | /graphql | |
 | POST | /graphql | | 
 
+### GraphQl Query
+
+| Query | RequestString |
+| ----- | ------------- |
+| allIdentificationNumber | query { allIdentificationNumber { id } } |
+| getIdentificationNumberByID | query { getIdentificationNumberByID (id:"98b72201-446f-461f-bed4-d8193eded5ea") { id,number } } |
+
+```
+curl -X POST http://localhost:8081/graphql -H 'Content-Type: application/json' -d 'query { allIdentificationNumber { id } }'
+```
+```
+curl -X POST http://localhost:8081/graphql -H 'Content-Type: application/json' -d 'query { getIdentificationNumberByID (id:"98b72201-446f-461f-bed4-d8193eded5ea") { id,number } }'
+```
