@@ -5,40 +5,41 @@ docker-compose up
 ```
 ## Access
 Frontend: <http://localhost:80> <br/>
-Backend: <http://localhost:8080>
+Backend: <http://localhost:8081>
 
 ## Frontend
 ### Tools
 Typescript, Angular 14+, Material Angular
 
-## Backend 
+## BackendGo 
 ### Tools
-Java 11+, Maven, Springboot 2.7
+Go Language
 
-### Build / Package
+### Build
 ```
-mvn package
+go mod download
+go build 
 ```
 ### Tests
 ```
-mvn test
+go test -cover ./...
 ```
 ### Metrics / Health Endpoints  
 
 | URI |
 | ------------------ |
-| <http://localhost:8080/actuator/health> |
-| <http://localhost:8080/actuator/metrics> |
-| <http://localhost:8080/actuator/metrics/http.server.requests> |
-| <http://localhost:8080/actuator/metrics/application.ready.time> |
+| <http://localhost:8081/health> |
+| <http://localhost:8081/metrics> |
 
-### API Endpoints
+### Endpoints
 
-| Method | URI | Description |
+| Method | URI | Description | 
 | ------ | ------------------ | --------------------|
-| GET | /api/identificationnumber/ | findAll |
-| GET | /api/identificationnumber/{id} | findById |
-| POST | /api/identificationnumber/ | new |
-| PUT | /api/identificationnumber/{id} | update |
-| DELETE | /api/identificationnumber/{id} | delete |
-| POST | /api/identificationnumber/query/ | pageable |
+| GET | /api/identificationnumber/ | Get all identification numbers |
+| GET | /api/identificationnumber/{id} | Get identification number by ID |
+| POST | /api/identificationnumber/ | Register a new identification number |
+| PUT | /api/identificationnumber/{id} | Update identification number |
+| POST | /api/identificationnumber/query/?sort={column,direction}&page={page}&size={size} |  |
+| GET | /graphql | |
+| POST | /graphql | | 
+
