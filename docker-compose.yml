@@ -27,7 +27,7 @@ services:
       restart_policy:
         condition: on-failure
   backendgo:
-    image: m2tx/neowaytc-backendgo:0.0.3
+    image: m2tx/neowaytc-backendgo:0.0.4
     healthcheck:
       test: "curl --fail --silent http://localhost:8081/health | grep UP || exit 1"
       interval: 30s
