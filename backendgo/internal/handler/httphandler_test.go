@@ -26,6 +26,7 @@ func setUpRouter() *gin.Engine {
 		{uuid.MustParse("789c728f-8fa2-494b-8db1-18808a5c61d8"), "046.847.189-80", false},
 		{uuid.MustParse("8ccf972c-6f24-4df3-ac65-b94853c10744"), "585.629.410-69", false},
 		{uuid.MustParse("35240f60-6a08-4774-becd-826bae221876"), "335.796.160-13", true},
+		{uuid.MustParse("41d4d2f1-f40e-42ee-b9d5-15eb5d48f102"), "423.590.810-39", true},
 	}))
 	NewHTTPHandler(service).Handler(router)
 	return router
@@ -116,6 +117,33 @@ func TestUpdateIdentificationNumberHandler(t *testing.T) {
 	for _, nb := range tests {
 		t.Run(nb.Name, func(t *testing.T) {
 			req, _ := http.NewRequest("PUT", "/api/identificationnumber/"+nb.ID, bytes.NewBuffer([]byte(nb.Json)))
+			w := httptest.NewRecorder()
+			router.ServeHTTP(w, req)
+			assert.Equal(t, nb.Expected, w.Code)
+			if w.Code == http.StatusOK {
+				var in domain.IdentificationNumber
+				json.Unmarshal(w.Body.Bytes(), &in)
+				assert.Equal(t, uuid.MustParse(nb.ID), in.ID)
+			}
+		})
+	}
+
+}
+
+func TestDeleteIdentificationNumberHandler(t *testing.T) {
+	type test struct {
+		Name     string
+		ID       string
+		Expected int
+	}
+	tests := []test{
+		{"StatusOK", "41d4d2f1-f40e-42ee-b9d5-15eb5d48f102", http.StatusOK},
+		{"StatusNotFound", "41d4d2f1-f40e-42ee-b9d5-15eb5d48f102", http.StatusInternalServerError},
+		{"StatusBadRequest", "10", http.StatusBadRequest},
+	}
+	for _, nb := range tests {
+		t.Run(nb.Name, func(t *testing.T) {
+			req, _ := http.NewRequest("DELETE", "/api/identificationnumber/"+nb.ID, nil)
 			w := httptest.NewRecorder()
 			router.ServeHTTP(w, req)
 			assert.Equal(t, nb.Expected, w.Code)

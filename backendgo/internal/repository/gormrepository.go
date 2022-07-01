@@ -62,13 +62,18 @@ func (rep *identificationNumberRepository) Save(identificationNumber domain.Iden
 	return nil
 }
 
+func (rep *identificationNumberRepository) Delete(identificationNumber domain.IdentificationNumber) error {
+	rowsAffected := rep.db.Delete(&domain.IdentificationNumber{ID: identificationNumber.ID}).RowsAffected
+	if rowsAffected == 0 {
+		return ports.ErrorNotFoundIdentificationNumber
+	}
+	return nil
+}
+
 func (rep *identificationNumberRepository) ExitsByNumber(number string) bool {
 	identificationNumber := &domain.IdentificationNumber{}
 	rep.db.Where(&domain.IdentificationNumber{Number: number}).First(&identificationNumber)
-	if identificationNumber.ID != uuid.Nil {
-		return true
-	}
-	return false
+	return identificationNumber.ID != uuid.Nil
 }
 
 func (rep *identificationNumberRepository) Query(params map[string]any, pageable domain.Pageable) (domain.Page, error) {

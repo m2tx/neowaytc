@@ -25,6 +25,7 @@ func (handler *HTTPHandler) Handler(router *gin.Engine) {
 	router.GET("/api/identificationnumber/:id", handler.GetById)
 	router.POST("/api/identificationnumber/", handler.New)
 	router.PUT("/api/identificationnumber/:id", handler.Update)
+	router.DELETE("/api/identificationnumber/:id", handler.Delete)
 	router.POST("/api/identificationnumber/query/", handler.Query)
 }
 
@@ -82,6 +83,22 @@ func (handler *HTTPHandler) Update(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, body)
+}
+
+func (handler *HTTPHandler) Delete(c *gin.Context) {
+	id, err := uuid.Parse(c.Param("id"))
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, []string{err.Error()})
+		return
+	}
+	identificationnumber := domain.IdentificationNumber{ID: id}
+	err = handler.service.Delete(identificationnumber)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, []string{err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, identificationnumber)
 }
 
 func (handler *HTTPHandler) Query(c *gin.Context) {
