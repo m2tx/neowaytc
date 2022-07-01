@@ -85,7 +85,7 @@ func (handler *HTTPHandler) Update(c *gin.Context) {
 }
 
 func (handler *HTTPHandler) Query(c *gin.Context) {
-	params := make(map[string]string)
+	params := make(map[string]any)
 	if err := c.ShouldBindJSON(&params); err != nil {
 		c.JSON(http.StatusBadRequest, []string{err.Error()})
 		return

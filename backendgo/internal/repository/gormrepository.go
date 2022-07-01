@@ -7,29 +7,48 @@ import (
 	"github.com/m2tx/neowaytc/backendgo/core/domain"
 	"github.com/m2tx/neowaytc/backendgo/core/ports"
 	"gorm.io/driver/postgres"
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
-type pgrep struct {
-	db gorm.DB
+type identificationNumberRepository struct {
+	db *gorm.DB
 }
 
-func NewIdentificationNumberPostgresRepository(url string) *pgrep {
-	db, _ := gorm.Open(postgres.Open(url), &gorm.Config{})
+func NewDb(url string) (*gorm.DB, error) {
+	var db *gorm.DB
+	var err error
+	if url != "" {
+		db, err = gorm.Open(postgres.Open(url), &gorm.Config{})
+	} else {
+		db, err = gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
+	}
+	return db, err
+}
 
+func NewIdentificationNumberRepository(db *gorm.DB) ports.IdentificationNumberRepository {
 	db.Table("identification_numbers").AutoMigrate(&domain.IdentificationNumber{})
-	return &pgrep{
-		db: *db,
+	return &identificationNumberRepository{
+		db: db,
 	}
 }
 
-func (rep *pgrep) GetAll() []domain.IdentificationNumber {
+func NewIdentificationNumberRepositoryTest(data []domain.IdentificationNumber) *ports.IdentificationNumberRepository {
+	db, _ := NewDb("")
+	rep := NewIdentificationNumberRepository(db)
+	for i := 0; i < len(data); i++ {
+		rep.Save(data[i])
+	}
+	return &rep
+}
+
+func (rep *identificationNumberRepository) GetAll() []domain.IdentificationNumber {
 	ins := []domain.IdentificationNumber{}
 	rep.db.Find(&ins)
 	return ins
 }
 
-func (rep *pgrep) Get(id uuid.UUID) (domain.IdentificationNumber, error) {
+func (rep *identificationNumberRepository) Get(id uuid.UUID) (domain.IdentificationNumber, error) {
 	identificationNumber := &domain.IdentificationNumber{}
 	rep.db.Where(&domain.IdentificationNumber{ID: id}).First(&identificationNumber)
 	if identificationNumber.ID == uuid.Nil {
@@ -38,18 +57,21 @@ func (rep *pgrep) Get(id uuid.UUID) (domain.IdentificationNumber, error) {
 	return *identificationNumber, nil
 }
 
-func (rep *pgrep) Save(identificationNumber domain.IdentificationNumber) error {
+func (rep *identificationNumberRepository) Save(identificationNumber domain.IdentificationNumber) error {
 	rep.db.Save(&identificationNumber)
 	return nil
 }
 
-func (rep *pgrep) ExitsByNumber(number string) bool {
+func (rep *identificationNumberRepository) ExitsByNumber(number string) bool {
 	identificationNumber := &domain.IdentificationNumber{}
 	rep.db.Where(&domain.IdentificationNumber{Number: number}).First(&identificationNumber)
-	return identificationNumber.ID != uuid.Nil
+	if identificationNumber.ID != uuid.Nil {
+		return true
+	}
+	return false
 }
 
-func (rep *pgrep) Query(params map[string]string, pageable domain.Pageable) (domain.Page, error) {
+func (rep *identificationNumberRepository) Query(params map[string]any, pageable domain.Pageable) (domain.Page, error) {
 	ins := []domain.IdentificationNumber{}
 	totalElements := int64(0)
 	rep.db.

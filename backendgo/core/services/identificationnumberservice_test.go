@@ -11,18 +11,16 @@ import (
 )
 
 var (
-	data = []domain.IdentificationNumber{
+	srv = NewIdentificationNumberService(*repository.NewIdentificationNumberRepositoryTest([]domain.IdentificationNumber{
 		{uuid.MustParse("789c728f-8fa2-494b-8db1-18808a5c61d8"), "046.847.189-80", false},
 		{uuid.MustParse("8ccf972c-6f24-4df3-ac65-b94853c10744"), "585.629.410-69", false},
 		{uuid.MustParse("35240f60-6a08-4774-becd-826bae221876"), "335.796.160-13", true},
-	}
-	rep = repository.NewIdentificationNumberMemoryRepository(data)
-	srv = NewIdentificationNumberService(rep)
+	}))
 )
 
 func TestGetAllIdentificationNumberService(t *testing.T) {
 	ins := srv.GetAll()
-	assert.Equal(t, len(ins), len(data))
+	assert.Equal(t, len(ins), 3)
 }
 
 func TestGetIdentificationNumberService(t *testing.T) {

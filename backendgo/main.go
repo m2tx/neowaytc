@@ -20,15 +20,16 @@ var (
 )
 
 func main() {
-	dbUrl := os.Getenv("DB_URL")
-	mode := os.Getenv("MODE")
-
-	repository := repository.NewIdentificationNumberPostgresRepository(dbUrl)
+	db, err := repository.NewDb(os.Getenv("DB_URL"))
+	if err != nil {
+		panic("Connection database failed!")
+	}
+	repository := repository.NewIdentificationNumberRepository(db)
 	service := services.NewIdentificationNumberService(repository)
 	httpHandler := handler.NewHTTPHandler(service)
 	graphQlHandler := handler.NewGraphQlHandler(service)
 
-	gin.SetMode(mode)
+	gin.SetMode(os.Getenv("MODE"))
 	router := gin.New()
 	log.Println("Configuring CORSMiddleware")
 	router.Use(CORSMiddleware())

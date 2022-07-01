@@ -16,21 +16,18 @@ import (
 )
 
 var (
-	data = []domain.IdentificationNumber{
-		{uuid.MustParse("789c728f-8fa2-494b-8db1-18808a5c61d8"), "046.847.189-80", false},
-		{uuid.MustParse("8ccf972c-6f24-4df3-ac65-b94853c10744"), "585.629.410-69", false},
-		{uuid.MustParse("35240f60-6a08-4774-becd-826bae221876"), "335.796.160-13", true},
-	}
-	rep         = repository.NewIdentificationNumberMemoryRepository(data)
-	service     = services.NewIdentificationNumberService(rep)
-	httpHandler = NewHTTPHandler(service)
-	router      = setUpRouter()
+	router = setUpRouter()
 )
 
 func setUpRouter() *gin.Engine {
 	gin.SetMode(gin.TestMode)
 	router := gin.New()
-	httpHandler.Handler(router)
+	service := services.NewIdentificationNumberService(*repository.NewIdentificationNumberRepositoryTest([]domain.IdentificationNumber{
+		{uuid.MustParse("789c728f-8fa2-494b-8db1-18808a5c61d8"), "046.847.189-80", false},
+		{uuid.MustParse("8ccf972c-6f24-4df3-ac65-b94853c10744"), "585.629.410-69", false},
+		{uuid.MustParse("35240f60-6a08-4774-becd-826bae221876"), "335.796.160-13", true},
+	}))
+	NewHTTPHandler(service).Handler(router)
 	return router
 }
 
@@ -140,8 +137,9 @@ func TestQueryIdentificationNumberHandler(t *testing.T) {
 		Expected int
 	}
 	tests := []test{
-		{"StatusOK1", "?sort=id,asc&page=0&size=5", "{\"blocked\":\"false\"}", http.StatusOK},
+		{"StatusOK1", "?sort=id,asc&page=0&size=5", "{}", http.StatusOK},
 		{"StatusOK2", "?sort=number,asc&page=0&size=5", "{\"number\":\"585.629.410-69\"}", http.StatusOK},
+		{"StatusOK3", "?sort=blocked,asc&page=0&size=5", "{\"blocked\":false}", http.StatusOK},
 		{"StatusBadRequest", "?sort=blocked,asc&page=0&size=5", "", http.StatusBadRequest},
 	}
 	for _, nb := range tests {
@@ -155,7 +153,6 @@ func TestQueryIdentificationNumberHandler(t *testing.T) {
 				var page domain.Page
 				json.Unmarshal(w.Body.Bytes(), &page)
 				assert.NotEmpty(t, page.Content)
-				assert.Greater(t, len(page.Content), 0)
 			}
 		})
 	}

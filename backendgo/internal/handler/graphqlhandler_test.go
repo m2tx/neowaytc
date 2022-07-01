@@ -8,19 +8,27 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/graphql-go/graphql"
+	"github.com/m2tx/neowaytc/backendgo/core/domain"
+	"github.com/m2tx/neowaytc/backendgo/core/services"
+	"github.com/m2tx/neowaytc/backendgo/internal/repository"
 	"github.com/stretchr/testify/assert"
 )
 
 var (
-	graphQlHandler = NewGraphQlHandler(service)
-	routerGraphQl  = setUpRouterGraphQlHandler()
+	routerGraphQl = setUpRouterGraphQlHandler()
 )
 
 func setUpRouterGraphQlHandler() *gin.Engine {
 	gin.SetMode(gin.TestMode)
 	router := gin.New()
-	graphQlHandler.Handler(router)
+	service := services.NewIdentificationNumberService(*repository.NewIdentificationNumberRepositoryTest([]domain.IdentificationNumber{
+		{uuid.MustParse("789c728f-8fa2-494b-8db1-18808a5c61d8"), "046.847.189-80", false},
+		{uuid.MustParse("8ccf972c-6f24-4df3-ac65-b94853c10744"), "585.629.410-69", false},
+		{uuid.MustParse("35240f60-6a08-4774-becd-826bae221876"), "335.796.160-13", true},
+	}))
+	NewGraphQlHandler(service).Handler(router)
 	return router
 }
 
