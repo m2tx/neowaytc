@@ -39,7 +39,8 @@ go test -cover ./...
 | GET | /api/identificationnumber/{id} | Get identification number by ID |
 | POST | /api/identificationnumber/ | Register a new identification number |
 | PUT | /api/identificationnumber/{id} | Update identification number |
-| POST | /api/identificationnumber/query/?sort={column,direction}&page={page}&size={size} |  |
+| DELETE | /api/identificationnumber/{id} | Delete identification number |
+| POST | /api/identificationnumber/query/?sort={column,direction}&page={page}&size={size} | Return identification number page |
 | GET | /graphql | |
 | POST | /graphql | | 
 
