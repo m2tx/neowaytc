@@ -79,7 +79,7 @@ func TestDeleteIdentificationNumberRepository(t *testing.T) {
 	}
 }
 
-func TestExitsByNumberIdentificationNumberRepository(t *testing.T) {
+func TestExistsByNumberIdentificationNumberRepository(t *testing.T) {
 	type test struct {
 		Name     string
 		Number   string
@@ -91,7 +91,7 @@ func TestExitsByNumberIdentificationNumberRepository(t *testing.T) {
 	}
 	for _, nb := range numbers {
 		t.Run(nb.Name, func(t *testing.T) {
-			atual := rep.ExitsByNumber(nb.Number)
+			atual := rep.ExistsByNumber(nb.Number)
 			assert.Equal(t, nb.Expected, atual)
 		})
 	}

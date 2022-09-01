@@ -18,7 +18,7 @@ type IdentificationNumberRepository interface {
 	Get(id uuid.UUID) (domain.IdentificationNumber, error)
 	Save(identificationNumber domain.IdentificationNumber) error
 	Delete(identificationNumber domain.IdentificationNumber) error
-	ExitsByNumber(number string) bool
+	ExistsByNumber(number string) bool
 	Query(params map[string]any, pageable domain.Pageable) (domain.Page, error)
 }
 

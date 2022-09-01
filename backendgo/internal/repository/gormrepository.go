@@ -70,7 +70,7 @@ func (rep *identificationNumberRepository) Delete(identificationNumber domain.Id
 	return nil
 }
 
-func (rep *identificationNumberRepository) ExitsByNumber(number string) bool {
+func (rep *identificationNumberRepository) ExistsByNumber(number string) bool {
 	identificationNumber := &domain.IdentificationNumber{}
 	rep.db.Where(&domain.IdentificationNumber{Number: number}).First(&identificationNumber)
 	return identificationNumber.ID != uuid.Nil

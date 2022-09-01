@@ -33,7 +33,7 @@ func (srv *service) New(number string) (domain.IdentificationNumber, error) {
 	if err != nil {
 		return domain.IdentificationNumber{}, err
 	}
-	if srv.identificationNumberRepository.ExitsByNumber(identificationNumber.Number) {
+	if srv.identificationNumberRepository.ExistsByNumber(identificationNumber.Number) {
 		return domain.IdentificationNumber{}, ports.ErrorExitsIdentificationNumber
 	}
 	err = srv.identificationNumberRepository.Save(*identificationNumber)
